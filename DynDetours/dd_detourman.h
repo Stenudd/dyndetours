@@ -24,6 +24,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 *
 */
+
 #ifndef _DD_DETOURMAN_H
 #define _DD_DETOURMAN_H
 

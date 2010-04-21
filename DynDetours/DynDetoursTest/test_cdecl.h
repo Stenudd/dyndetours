@@ -23,30 +23,27 @@
 *
 * 3. This notice may not be removed or altered from any source distribution.
 *
-* SetMemPatchable and ProtectMemory taken entirely from CSSDM by
-* David "BAILOPAN" Anderson.
 */
 
-#ifndef _MEMPATCH_H
-#define _MEMPATCH_H
+#ifndef _TEST_CDECL_H
+#define _TEST_CDECL_H
 
-// ==================================================================
-// Includes
-// ==================================================================
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#include <stdio.h>
+//========================================================================
+// Tests for hooking CDECL functions go here.
+//========================================================================
 
-// ==================================================================
-// Memory functions.
-// ==================================================================
-extern void ProtectMemory(void *addr, int length, int prot);
-extern void SetMemPatchable(void *address, size_t size);
+//========================================================================
+// Function prototypes that we're going to hook.
+//========================================================================
+void cdecl_function1( void );				 /* No return value. No arguments. */
+void cdecl_function2( int a, int b, int c ); /* No return value. 3 arguments.  */
 
-// ==================================================================
-// Misc detour functions.
-// ==================================================================
-extern void WriteJMP(unsigned char* src, void* dest);
+int cdecl_function3( void );				/* Return int, no arguments. */
+int cdecl_function4( int a, int b, int c ); /* Return int, 3 arguments.  */
 
-#endif
+//========================================================================
+// Begins the testing sequence.
+//========================================================================
+void cdecl_begin( void );
+
+#endif // _TEST_CDECL_H

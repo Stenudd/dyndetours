@@ -175,17 +175,29 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\dd_callback.h"
+				RelativePath=".\test_cdecl.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\dd_definitions.h"
+				RelativePath=".\test_cdecl.h"
 				>
 			</File>
-			<File
-				RelativePath="..\dd_detour.h"
+			<Filter
+				Name="dyndetours"
 				>
-			</File>
+				<File
+					RelativePath="..\dd_callback.h"
+					>
+				</File>
+				<File
+					RelativePath="..\dd_definitions.h"
+					>
+				</File>
+				<File
+					RelativePath="..\dd_detour.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Link Libraries"
