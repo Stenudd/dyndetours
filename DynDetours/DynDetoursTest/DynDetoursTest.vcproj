@@ -172,6 +172,10 @@
 				RelativePath=".\test_cdecl.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\test_thiscall.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -180,6 +184,10 @@
 			>
 			<File
 				RelativePath=".\test_cdecl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\test_thiscall.h"
 				>
 			</File>
 			<Filter

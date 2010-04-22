@@ -28,29 +28,21 @@
 //========================================================================
 // Includes
 //========================================================================
-#include "test_cdecl.h"
 #include "test_thiscall.h"
-#include "dd_detourman.h"
+#include "dd_macros.h"
 
 //========================================================================
-// Main entry point.
+// Declares a function hook.
 //========================================================================
-int main( void )
+DECLARE_HOOK( this_hook )
 {
-	// Initialize the detour manager
-	g_pDetourManager = new CDetourManager();
+	printf("\n\nInside this_hook!\n\n");
 
-	// Begin testing!
+	// Get this pointer
+	
 
-	// __cdecl
-	cdecl_begin();
-
-	// Free up memory.
-	delete g_pDetourManager;
-
-	// Pause the command prompt.
-	system("pause");
-
-	// Done!
-	return 0;
+	// No return value.
+	DYN_RETN_VOID();
 }
+
+

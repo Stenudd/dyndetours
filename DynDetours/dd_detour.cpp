@@ -69,6 +69,9 @@ CDetour::CDetour( void* pTarget, void* pCallBack, char* szParams,
 	// Instantiate the detour information
 	m_pInfo = new CDetourInfo( szParams, conv );
 
+	// Allocate space for the function state
+	m_pState = new CFuncState();
+
 	// ----------------------
 	// Detour initialization!
 	// ----------------------
@@ -95,11 +98,21 @@ CDetour::~CDetour()
 
 		// Free up memory taken by the detour info
 		if( m_pInfo )
+		{
 			delete m_pInfo;
+		}
+
+		// Free up memory taken up by the state.
+		if( m_pState )
+		{
+			delete m_pState;
+		}
 
 		// Free memory taken up by the trampoline
 		if( m_pSavedBytes )
+		{
 			delete m_pSavedBytes;
+		}
 
 		// Free up assembler memory
 		m_Assembler.free();
@@ -175,7 +188,7 @@ void CDetour::Setup_PreCall()
 	//  7) Jump if equal, to override.
 	//  8) Otherwise, jump to trampoline.
 	//---------------------------------------
-	m_Assembler.mov(dword_ptr_abs(&m_ulOrigESP), esp); // mov m_ulOrigESP, esp
+	m_Assembler.mov(dword_ptr_abs(&m_pState->m_ulOrigESP), esp); // mov m_ulOrigESP, esp
 
 #ifdef _WIN32
 	//---------------------------------------
@@ -183,7 +196,7 @@ void CDetour::Setup_PreCall()
 	// the this pointer into ECX.
 	//---------------------------------------
 	if( m_pInfo->GetConv() == Convention_THIS )
-		m_Assembler.mov(dword_ptr_abs(&m_ulOrigECX), ecx);
+		m_Assembler.mov(dword_ptr_abs(&m_pState->m_ulOrigECX), ecx);
 #endif
 
 	//---------------------------------------
@@ -204,7 +217,8 @@ void CDetour::Setup_PreCall()
 	//---------------------------------------
 #ifdef _WIN32
 	if( m_pInfo->GetConv() == Convention_THIS )
-		m_Assembler.mov(ecx, dword_ptr_abs(&m_ulOrigECX)); // mov ecx, m_ulOrigECX
+		m_Assembler.mov(ecx, dword_ptr_abs(
+						&m_pState->m_ulOrigECX)); // mov ecx, m_ulOrigECX
 #endif
 
 	//---------------------------------------
@@ -240,7 +254,7 @@ void CDetour::Setup_Override()
 	//	3) Return.
 	//---------------------------------------
 	m_Assembler.bind(&m_OverCall);
-	m_Assembler.mov( eax, dword_ptr_abs(&m_ulRetBuffer));
+	m_Assembler.mov( eax, dword_ptr_abs(&m_pState->m_pRetVAL));
 	m_Assembler.ret();
 }
 

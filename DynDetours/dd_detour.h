@@ -34,6 +34,7 @@
 #include "dd_detourinfo.h"  /* Need CDetourInfo class. */
 #include "dd_callback.h"    /* Need ICallBack interface. */
 #include "dd_definitions.h" /* Need detour definitions. */
+#include "dd_funcstate.h"	/* Need CFuncState class. */
 #include "ASMJit/AsmJit.h"  /* Need Assembler and Label classes. */
 #include <vector>			/* Need vector class. */
 
@@ -60,14 +61,16 @@ class CDetour
 		unsigned char* m_pSavedBytes;   /* Bytes saved from the original function. */
 		int			   m_iSavedBytes;	/* Number of bytes we saved. */
 
-		// Information about the detour.
 		CDetourInfo*   m_pInfo;			/* Information about the detour. */
+		CFuncState*	   m_pState;		/* Register save information. */
 
+#if 0
 		// Variables related to registers
 		unsigned long  m_ulOrigESP;		/* ESP before calling the handler. */
 		unsigned long  m_ulOrigRet;		/* Return address of target function. */
 		unsigned long  m_ulOrigECX;		/* ECX before calling the handler. */
 		void*		   m_ulRetBuffer;	/* Stores the return value if we're blocking a call. */
+#endif
 
 		// Variables related to detour status
 		bool		   m_bInitialized;	/* True if everything was successfully setup. */
@@ -130,12 +133,6 @@ class CDetour
 		 */
 		HookRes_t* Process_CallBacks( void );
 
-		/* @brief Accessor for the stack pointer.
-		 * @return unsigned long containing the value of ESP before the call
-		 *	to the callback.
-		 */
-		unsigned long GetESP( void ) { return m_ulOrigESP; }
-
 		/* @brief Accessor for CDetourInfo instance.
 		 * @return CDetourInfo pointer containing information about the detour.
 		 */
@@ -146,11 +143,7 @@ class CDetour
 		 */
 		unsigned char* GetTarget( void ) { return m_pTarget; }
 
-		/* @brief Sets the return value which will override EAX.
-		 * @param retVal - Value to write to EAX in place of the original
-		 *	function's return value.
-		 */
-		void SetRet( void* retVal )  { m_ulRetBuffer = retVal; }
+		CFuncState* GetState( void ) { return m_pState; }
 };
 
 #endif // _DD_DETOUR_H

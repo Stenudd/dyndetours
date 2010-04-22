@@ -39,15 +39,31 @@ int DynHandler( CDetour* pDet )
 {
 	// Sanity check
 	if( !pDet )
+	{
 		return HOOK_ACTION_ERROR;
+	}
+
+	// We'll store function state information here.
+	CFuncState* pState = pDet->GetState();
+
+	// Make sure it's valid
+	if( !pState )
+	{
+		return HOOK_ACTION_ERROR;
+	}
 
 	// We'll store the highest priority result
 	// in this variable.
 	HookRes_t* pHighest = pDet->Process_CallBacks();
 
+	// If we got NULL back from the callbacks,
+	// there was a problem.
 	if( !pHighest )
+	{
 		return HOOK_ACTION_ERROR;
+	}
 
+	// Figure out what to do.
 	switch(pHighest->action)
 	{
 		/* Call the function like normal. */
@@ -64,7 +80,7 @@ int DynHandler( CDetour* pDet )
 		case HOOK_ACTION_OVERRIDE:
 		{
 			// Set the retbuffer value
-			pDet->SetRet( pHighest->retVal );
+			pState->SetRetVal( pHighest->retVal );
 
 			// Free memory
 			delete pHighest;

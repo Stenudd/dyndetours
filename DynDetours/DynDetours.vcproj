@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dd_funcstate.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dd_handler.h"
 				>
 			</File>
