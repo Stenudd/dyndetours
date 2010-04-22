@@ -32,12 +32,13 @@
 // Includes
 //========================================================================
 #include "dd_definitions.h"
+#include "dd_detour.h"
 
 //========================================================================
 // Declares a handler function for a hook.
 //========================================================================
 #define DECLARE_HOOK( name ) \
-	HookRes_t* ##name##_hook( CDetour* pDet )
+	HookRes_t* ##name( CDetour* pDet )
 
 //========================================================================
 // Use this macro if you are in a void function, or don't want to

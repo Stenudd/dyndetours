@@ -62,7 +62,27 @@ void CDetourInfo::SetParams( char* szParams )
 	strcpy_s(m_szParams, strlen(szParams) + 1, szParams);
 	
 	// Calculate the number of parameters
-	m_nNumParams = strlen(szParams) - 2;
+	// m_nNumParams = strlen(szParams) - 2;
+	m_nNumParams = 0;
+
+	// Loop through each character
+	char* ch = m_szParams;
+	while( *ch != ')' && *ch != '\0' )
+	{
+		// Figure out what it is..
+		switch(*ch)
+		{
+			// Void, don't increment.
+			case 'v':
+				break;
+
+			// Otherwise, accept it.
+			default:
+				m_nNumParams++;
+		}	
+
+		ch++;
+	}
 
 	// Compute stack offsets
 	ComputeStackOffsets();
@@ -88,6 +108,13 @@ CDetourInfo::~CDetourInfo()
 //========================================================================
 void CDetourInfo::ComputeStackOffsets()
 {
+	// Skip this if no parameters
+	if( m_nNumParams == 0 )
+	{
+		m_iOffsets = NULL;
+		return;
+	}
+
 	// Allocate space for offset array
 	m_iOffsets = new int[m_nNumParams];
 

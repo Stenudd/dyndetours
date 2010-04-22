@@ -25,64 +25,39 @@
 *
 */
 
-#ifndef _DD_C_CALLBACK_H
-#define _DD_C_CALLBACK_H
+#ifndef _DD_C_H
+#define _DD_C_H
+
+//========================================================================
+// This is the C interface for dyndetours!
+//========================================================================
 
 //========================================================================
 // Includes
 //========================================================================
 #include "dd_definitions.h"
-#include "dd_callback.h"
-#include "dd_detour.h"
-#include <vector>
 
 //========================================================================
-// Namespaces we need.
+// Interface functions.
 //========================================================================
-using namespace std;
 
-//========================================================================
-// C-Function prototype
-//========================================================================
-typedef HookRes_t* (*C_CallBackFunc)( CDetour* );
+/* @brief Native C functions will use this to hook functions.
+ * @param pTarget   - Target function to hook.
+ * @param szParams  - Parameter format string of the target.
+ * @param conv      - Calling convention of target.
+ * @param pCallBack - Function to redirect to. NULL if you want to use
+ *					  the DynHandler function (RECOMMENDED)!
+ * @return True if the callback was added successfully.
+ */
+extern bool AddCallBack(void* pTarget, char* szParams, eCallingConv conv, 
+						void* pCallBack);
 
-//========================================================================
-// Callback class for C functions.
-//========================================================================
-class C_CallBack : public ICallBack
-{
-	private:
-		vector<void *> m_vecCallBacks;
+/* @brief  Native C functions will use this to remove a callback.
+ * @param  pTarget   - The target function the callback is stored in.
+ * @param  pCallBack - Function to remove from the callback.
+ * @return True if removal was successful.
+ */
+extern bool RemoveCallBack(void* pTarget, void* pCallBack);
 
-	public:
 
-		/* @brief Processes every function callback inside this class's
-		 *	internal list.
-		 * @return The result of the highest priority callback.
-		 */
-		virtual HookRes_t* ProcessCallBack( CDetour* pDet );
-
-		/* @brief Accessor for the language name this callback represents.
-		 * @return String containing the name of the language this callback
-		 *	is meant for.
-		 */
-		virtual const char* GetLanguageName( void )
-		{
-			return "C";
-		}
-
-		/* @brief Adds a callback to our internal list of C function
-		 *	pointers.
-		 * @param pCallBack - Pointer to a callback function.
-		 * @return True if we were able to add the callback successfully.
-		 */
-		bool Add( void* pCallBack );
-
-		/* @brief  Removes a callback from our internal list.
-		 * @param  pCallBack - Function to remove from being called.
-		 * @return True if the callback was removed successfully.
-		 */
-		bool Remove( void* pCallBack );
-};
-
-#endif // _DD_C_CALLBACK_H
+#endif // _DD_C_H

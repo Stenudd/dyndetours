@@ -308,6 +308,14 @@
 					Name="C"
 					>
 					<File
+						RelativePath=".\dd_c.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\dd_c.h"
+						>
+					</File>
+					<File
 						RelativePath=".\dd_c_callback.cpp"
 						>
 					</File>

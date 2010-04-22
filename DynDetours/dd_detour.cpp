@@ -49,7 +49,7 @@ CDetour::CDetour( void* pTarget, void* pCallBack, char* szParams,
 	// Sanity checking.
 	if( !pTarget || !szParams )
 	{
-		// Default it up
+		// Set default values.
 		pTarget = pCallBack = szParams = NULL;
 		m_bInitialized = false;
 		return;
@@ -182,7 +182,7 @@ void CDetour::Setup_PreCall()
 	// On Microsoft Windows, a thiscall puts
 	// the this pointer into ECX.
 	//---------------------------------------
-	if( m_pInfo->GetConv() == DYN_CALL_CONV_THIS )
+	if( m_pInfo->GetConv() == Convention_THIS )
 		m_Assembler.mov(dword_ptr_abs(&m_ulOrigECX), ecx);
 #endif
 
@@ -203,7 +203,7 @@ void CDetour::Setup_PreCall()
 	// Restore ECX if we're a thiscall.
 	//---------------------------------------
 #ifdef _WIN32
-	if( m_pInfo->GetConv() == DYN_CALL_CONV_THIS )
+	if( m_pInfo->GetConv() == Convention_THIS )
 		m_Assembler.mov(ecx, dword_ptr_abs(&m_ulOrigECX)); // mov ecx, m_ulOrigECX
 #endif
 
@@ -344,7 +344,8 @@ bool CDetour::CallBack_Add( ICallBack* pCallBack )
 	if( !pCallBack )
 		return false;
 
-	// Does it already exist?
+	// Does a callback for this language already
+	// exist?
 	if( CallBack_Find(pCallBack->GetLanguageName()) )
 		return true;
 

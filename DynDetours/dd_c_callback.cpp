@@ -32,75 +32,57 @@
 #include "dd_detourman.h"
 
 //========================================================================
-// Creates and/or adds a detour to a function.
+// Adds a function to call back.
 //========================================================================
-C_Callback* C_HookFunction( void* pTarget, char* szParams, eCallingConv conv, 
-					void* pCallBack )
+bool C_CallBack::Add( void* pCallBack )
 {
-	// Sanity checking
-	if( !pTarget || !szParams )
-		return NULL;
-
-	// This either creates or returns already existing detour.
-	CDetour* pDetour = g_pDetourManager->Add_Detour( pTarget, szParams, conv );
-
-	// Checks to see if there is a callback for the C language
-	C_Callback* c = (C_Callback *)pDetour->CallBack_Find( "C" );
-
-	// If it exists, add our function to it.
-	if( c )
+	// Make sure it's valid.
+	if( !pCallBack )
 	{
-		c->Add(pCallBack);
-		return c;
+		return false;
 	}
 
-	// If it doesn't exist add it
-	c = new C_Callback();
-	c->Add(pCallBack);
-	
-	if( pDetour->CallBack_Add((ICallBack *)c) )
-		printf("Added C callback successfully.\n");
-	
-	return c;
+	// Add it to our internal callback list.
+	m_vecCallBacks.push_back(pCallBack);
+
+	// Done
+	return true;
 }
 
-#if 0
 //========================================================================
-// Removes a callback from a detour.
+// Removes the callback from our internal list.
 //========================================================================
-bool C_RemoveHook( void* pTarget, void* pCallBack )
+bool C_CallBack::Remove( void* pCallBack )
 {
-	if( !pTarget || !pCallBack )
+	// Can't remove NULL!
+	if( !pCallBack )
+	{
 		return false;
+	}
 
-	// Find the detour for this target
-	CDetour* pDet = NULL;
-	Detour_t* d = g_pDetourManager->Find_Detour(pTarget);
+	// Loop through each element in the vector.
+	vector<void *>::iterator i;
+	for( i = m_vecCallBacks.begin(); i != m_vecCallBacks.end(); i++ )
+	{
+		// If they are equal, remove it
+		if( (*i) == pCallBack )
+		{
+			// Get rid of the function pointer.
+			m_vecCallBacks.erase(i);
 
-	// If the result is valid
-	if( d )
-		pDet = d->pDetour;
+			// Done!
+			return true;
+		}
+	}
 
-	// If it doesn't exist don't bother
-	if( !pDet )
-		return false;
-
-	// Find C language callback
-	C_Callback* pLangCallBack = (C_Callback *)pDet->CallBack_Find("C");
-
-	// If it's not valid, don't bother
-	if( !pLangCallBack )
-		return false;
-
-	// Remove the callback
-	pLangCallBack->Remove(pCallBack);
+	// If we're here, we didn't find it!
+	return false;
 }
-#endif
 
 //========================================================================
 // Processes callbacks for C functions.
 //========================================================================
-HookRes_t* C_Callback::ProcessCallBack( CDetour* pDet ) 
+HookRes_t* C_CallBack::ProcessCallBack( CDetour* pDet ) 
 {
 	HookRes_t* pHighest = NULL;
 	HookRes_t* pCurRes  = NULL;

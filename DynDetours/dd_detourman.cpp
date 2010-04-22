@@ -100,6 +100,9 @@ bool CDetourManager::Remove_Detour( void* pTarget )
 		// Did we find it?
 		if( (*i)->GetTarget() == pTarget )
 		{
+			// Call it's destructor
+			delete (*i);
+
 			// Remove it from the vector
 			m_DetourList.erase(i);
 
