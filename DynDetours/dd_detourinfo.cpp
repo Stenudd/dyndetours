@@ -86,8 +86,6 @@ void CDetourInfo::SetParams( char* szParams )
 
 	// Compute stack offsets
 	ComputeStackOffsets();
-
-	printf("Number of parameters: %d\n", m_nNumParams);
 }
 
 //========================================================================
@@ -97,10 +95,14 @@ CDetourInfo::~CDetourInfo()
 {
 	// Free up memory
 	if( m_szParams )
+	{
 		delete m_szParams;
+	}
 
 	if( m_iOffsets )
+	{
 		delete m_iOffsets;
+	}
 }
 
 //========================================================================

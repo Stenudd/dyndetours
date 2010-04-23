@@ -30,6 +30,7 @@
 //========================================================================
 #include "dd_c.h"
 #include "dd_c_callback.h"
+#include "dd_callbackman.h"
 #include "dd_detourman.h"
 
 //========================================================================
@@ -47,25 +48,32 @@ bool AddCallBack(void* pTarget, char* szParams, eCallingConv conv,
 	// This either creates or returns already existing detour.
 	CDetour* pDetour = g_pDetourManager->Add_Detour( pTarget, szParams, conv );
 
-	// See if we can find a C_CallBack instance for the C++ language
-	// registered to this detour instance.
-	C_CallBack* c = (C_CallBack *)pDetour->CallBack_Find( "C" );
+	// Get the callback manager.
+	CCallBackManager* pManager = pDetour->GetCallBackManager();
 
-	// If it exists, add our function pointer to it.
-	if( c )
+	// Make sure it is valid.
+	if( !pManager )
 	{
-		// Return the result of C_CallBack::Add.
-		return c->Add(pCallBack);
+		return false;
 	}
 
-	// If the C_CallBack instance does not exist, create it.
-	c = new C_CallBack();
+	// Do we have a callback for the C language?
+	C_CallBack* callback = (C_CallBack *)pManager->FindCallBack("C");
 
-	// Now add the function pointer to it.
-	c->Add(pCallBack);
+	// If so, add the function pointer to it.
+	if( callback )
+	{
+		return callback->Add(pCallBack);
+	}
 
-	// Now store it inside the detour instance.
-	return pDetour->CallBack_Add(c);
+	// If not, we need to create it.
+	callback = new C_CallBack();
+
+	// Add our function to it.
+	callback->Add(pCallBack);
+
+	// Now add it to our manager.
+	return pManager->AddCallBack(callback);
 }
 
 //========================================================================
@@ -88,8 +96,17 @@ bool RemoveCallBack( void* pTarget, void* pCallBack )
 		return false;
 	}
 
+	// Get the callback manager for the detour.
+	CCallBackManager* pManager = pDet->GetCallBackManager();
+	
+	// Make sure it's valid.
+	if( !pManager )
+	{
+		return false;
+	}
+
 	// Find C language callback
-	C_CallBack* pLangCallBack = (C_CallBack *)pDet->CallBack_Find("C");
+	C_CallBack* pLangCallBack = (C_CallBack *)pManager->FindCallBack("C");
 
 	// If it's not valid, don't bother
 	if( !pLangCallBack )

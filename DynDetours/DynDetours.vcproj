@@ -148,6 +148,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\dd_callbackman.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\dd_detour.cpp"
 				>
 			</File>
@@ -271,6 +275,10 @@
 			>
 			<File
 				RelativePath=".\dd_callback.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dd_callbackman.h"
 				>
 			</File>
 			<File

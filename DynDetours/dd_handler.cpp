@@ -30,6 +30,7 @@
 //========================================================================
 #include "dd_handler.h"
 #include "dd_detour.h"
+#include "dd_callbackman.h"
 #include "dd_definitions.h"
 
 //========================================================================
@@ -40,21 +41,25 @@ int DynHandler( CDetour* pDet )
 	// Sanity check
 	if( !pDet )
 	{
+		// If the detour instance isn't valid,
+		// something went wrong. Tell the stub not to
+		// do anything.
 		return HOOK_ACTION_ERROR;
 	}
 
-	// We'll store function state information here.
+	// Get the function state variables.
 	CFuncState* pState = pDet->GetState();
 
-	// Make sure it's valid
+	// Make sure the state is valid
 	if( !pState )
 	{
+		// Something went wrong.
 		return HOOK_ACTION_ERROR;
 	}
 
 	// We'll store the highest priority result
 	// in this variable.
-	HookRes_t* pHighest = pDet->Process_CallBacks();
+	HookRes_t* pHighest = pDet->ProcessCallBacks();
 
 	// If we got NULL back from the callbacks,
 	// there was a problem.

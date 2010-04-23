@@ -36,11 +36,6 @@
 //========================================================================
 DECLARE_HOOK( this_hook )
 {
-	printf("\n\nInside this_hook!\n\n");
-
-	// Get this pointer
-	
-
 	// No return value.
 	DYN_RETN_VOID();
 }

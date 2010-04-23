@@ -49,8 +49,6 @@ CDetour::CDetour( void* pTarget, void* pCallBack, char* szParams,
 	// Sanity checking.
 	if( !pTarget || !szParams )
 	{
-		// Set default values.
-		pTarget = pCallBack = szParams = NULL;
 		m_bInitialized = false;
 		return;
 	}
@@ -60,17 +58,25 @@ CDetour::CDetour( void* pTarget, void* pCallBack, char* szParams,
 
 	// If we're given a callback, use it!
 	if( pCallBack )
+	{
 		m_pCallBack = (unsigned char *)pCallBack;
+	}
 	
 	// Otherwise, use the default.
 	else
+	{
 		m_pCallBack = (unsigned char *)(&DynHandler);
+	}
 
 	// Instantiate the detour information
 	m_pInfo = new CDetourInfo( szParams, conv );
 
-	// Allocate space for the function state
+	// Instantiate storage for the function state
+	// information class.
 	m_pState = new CFuncState();
+
+	// Instantiate the callback manager.
+	m_pManager = new CCallBackManager();
 
 	// ----------------------
 	// Detour initialization!
@@ -106,6 +112,13 @@ CDetour::~CDetour()
 		if( m_pState )
 		{
 			delete m_pState;
+		}
+
+		// Free up memory taken up by the callback
+		// manager.
+		if( m_pManager )
+		{
+			delete m_pManager;
 		}
 
 		// Free memory taken up by the trampoline
@@ -258,114 +271,17 @@ void CDetour::Setup_Override()
 	m_Assembler.ret();
 }
 
-
 //========================================================================
-// Processes all the callbacks for this detour.
+// Processes callbacks for this detour.
 //========================================================================
-HookRes_t* CDetour::Process_CallBacks()
+HookRes_t* CDetour::ProcessCallBacks( void )
 {
-	// Are we initialized?
-	if( !m_bInitialized )
-		return NULL;
-
-	// We will store the highest priority hook in this
-	// variable.
-	HookRes_t* pHighest = NULL;
-	HookRes_t* pCurRes = NULL;
-
-	// Loop through all the callbacks in the vector.
-	for( unsigned int i = 0; i < m_vecCallBacks.size(); i++ )
+	// Make sure we're initialized.
+	if( !m_bInitialized || !m_pManager )
 	{
-		// Get the ICallBack instance.
-		ICallBack* pCallBack = m_vecCallBacks[i];
-
-		// Sanity check
-		if( !pCallBack )
-			continue;
-
-		// Tell it to process its callbacks.
-		pCurRes = pCallBack->ProcessCallBack( this );
-
-		// Something went wrong
-		if( !pCurRes )
-		{
-			// Move on to the next callback.
-			continue;
-		}
-		
-		// Is pHighest initialized?
-		if( !pHighest )
-		{
-			// If not, set the current result to it.
-			pHighest = pCurRes;
-
-			// And iterate to the next callback.
-			continue;
-		}
-
-		// Check priority
-		if( pCurRes->action >= pHighest->action )
-		{
-			// Get rid of the memory from the old result.
-			delete pHighest;
-
-			// Set it to the new result.
-			pHighest = pCurRes;
-		}
-
-		else
-		{
-			delete pCurRes;
-		}
+		return NULL;
 	}
 
-	// Return our highest priority result.
-	return pHighest;
-}
-
-//========================================================================
-// Finds a callback by language.
-//========================================================================
-ICallBack* CDetour::CallBack_Find( const char* szLanguage )
-{
-	if( !szLanguage )
-		return NULL;
-
-	// Loop through each callback
-	for( unsigned int i = 0; i < m_vecCallBacks.size(); i++ )
-	{
-		// Grab ICallBack instance
-		ICallBack* pCallBack = m_vecCallBacks[i];
-
-		// Is it valid?
-		if( !pCallBack )
-			continue;
-
-		// If it is, check the language
-		if( strcmp(szLanguage, pCallBack->GetLanguageName()) == 0 )
-			return pCallBack;
-	}
-
-	// If we're here, we couldn't find it
-	return NULL;
-}
-
-//========================================================================
-// Adds a callback to this Detour's internal list.
-//========================================================================
-bool CDetour::CallBack_Add( ICallBack* pCallBack )
-{
-	if( !pCallBack )
-		return false;
-
-	// Does a callback for this language already
-	// exist?
-	if( CallBack_Find(pCallBack->GetLanguageName()) )
-		return true;
-
-	// Add it if it's not
-	m_vecCallBacks.push_back(pCallBack);
-
-	// We're done!
-	return true;
+	// Have the CallBack manager do the horsework.
+	return m_pManager->ProcessCallBacks( this );
 }

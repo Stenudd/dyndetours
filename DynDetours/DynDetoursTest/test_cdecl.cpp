@@ -28,10 +28,10 @@
 //========================================================================
 // Includes
 //========================================================================
+#include <stdio.h>		/* Printf...					   */
 #include "test_cdecl.h" /* Need header for test functions. */
 #include "dd_c.h"		/* C Interface for DynDetours.     */
 #include "dd_macros.h"	/* Macros for DynDetours.		   */
-#include <stdio.h>		/* Printf...					   */
 
 //========================================================================
 // No return value, no arguments.
@@ -48,12 +48,12 @@ void cdecl_function1( void )
 	c++;
 
 	// Prologue
-	printf("=================================\n");
-	printf("Function: cdecl_function1\n");
+	printf("\n\n=================================");
+	printf("\nFunction: cdecl_function1");
 	
 	// Print out the values.
-	printf("Locals: %d %d %d\n", a, b,c);
-	printf("=================================\n\n");
+	printf("\n Locals: %d %d %d", a, b,c);
+	printf("\n=================================");
 }
 
 //========================================================================
@@ -66,12 +66,12 @@ void cdecl_function2( int a, int b, int c )
 	c++;
 
 	// Prologue
-	printf("=================================\n");
-	printf("Function: \n cdecl_function2\n");
+	printf("\n\n=================================");
+	printf("\nFunction: cdecl_function2");
 
 	// Print out the values.
-	printf("Locals: %d %d %d\n", a, b,c);
-	printf("=================================\n\n");
+	printf("\n Locals: %d %d %d", a, b,c);
+	printf("\n=================================");
 }
 
 //========================================================================
@@ -89,12 +89,12 @@ int cdecl_function3( void )
 	c++;
 
 	// Prologue
-	printf("=================================\n");
-	printf("Function: \n cdecl_function3\n");
+	printf("\n\n=================================");
+	printf("\nFunction: cdecl_function3");
 
 	// Print out the values.
-	printf("Locals: %d %d %d\n", a, b,c);
-	printf("=================================\n");
+	printf("\n Locals: %d %d %d", a, b,c);
+	printf("\n=================================");
 
 	return 30;
 }
@@ -109,64 +109,160 @@ int cdecl_function4( int a, int b, int c )
 	c++;
 
 	// Prologue
-	printf("=================================\n");
-	printf("Function: \n cdecl_function4\n");
+	printf("\n\n=================================");
+	printf("\nFunction: cdecl_function4");
 
 	// Print out the values.
-	printf("Locals: %d %d %d\n", a, b,c);
-	printf("=================================\n");
+	printf("\n Locals: %d %d %d", a, b,c);
+	printf("\n=================================");
 
 	return 29;
 }
 
 //========================================================================
 // Hook for function1.
+//  NOTE: Calls the original function like normal.
 //========================================================================
-DECLARE_HOOK( function1 )
+DECLARE_HOOK( function1_hook )
 {
 	// Prologue
-	printf("=================================\n");
-	printf("Function: \n function1_hook\n");
-
-	// Get function state information.
-	CFuncState* pState = pDet->GetState();
-
-	// Get detour info
-	CDetourInfo* pDetInfo = pDet->GetInfo();
-
-	// Parse params and print
-	int* paramOffsets = pDetInfo->GetOffsets();
-
-	for( int i = 0; i < pDetInfo->GetNumParams(); i++ )
-	{
-		int paramVal = *((int *)(pState->GetESP() + paramOffsets[i]));
-		printf("Parameter %d: %d\n", i, paramVal);
-	}
-
-	printf("=================================\n");
+	printf("\n\n=================================");
+	printf("\nFunction: function1_hook");
+	printf("\n=================================");
 
 	// Void functions don't return.
+	// Don't override. Call function like normal.
 	DYN_RETN_VOID();
 }
 
 //========================================================================
-// Hook for function 2.
+// Hook for function1.
+//  NOTE: Does not call the original function.
 //========================================================================
+DECLARE_HOOK( function1_override )
+{
+	printf("\n\n=================================");
+	printf("\nFunction: function1_override");
+	printf("\n=================================");
+
+	// We don't want to call cdecl_function1.
+	DYN_RETN(NULL);
+}
+
+//========================================================================
+// Hook for function2.
+//  NOTE: Calls the original function like normal.
+//========================================================================
+DECLARE_HOOK( function2_hook )
+{
+	// Prologue
+	printf("\n\n=================================");
+	printf("\nFunction: function2_hook\n");
+
+	// Get info manager
+	CDetourInfo* pInfo = pDet->GetInfo();
+
+	// Get function state variables
+	CFuncState* pState = pDet->GetState();
+
+	// Make sure both are valid
+	if( !pInfo || !pState )
+	{
+		// Return.
+		DYN_RETN_VOID();
+	}
+
+	// Loop through the parameter format string.
+	char* ch = pInfo->GetParams();
+	for( int i = 0; i < pInfo->GetNumParams(); i++ )
+	{
+		switch( *ch )
+		{
+			case 'i':
+			{
+				int arg;
+				arg = *(int *)(pState->GetESP() + pInfo->GetOffsets()[i]);
+				printf(" Arg[%d]: int, %d\n", i, arg);
+			}
+		}
+	}
+
+
+	printf("=================================");
+
+	// Void functions don't return.
+	// Don't override. Call function like normal.
+	DYN_RETN_VOID();
+}
+
+//========================================================================
+// Hook for function2.
+//  NOTE: Does not call the original function.
+//========================================================================
+DECLARE_HOOK( function2_override )
+{
+	printf("\n\n=================================");
+	printf("\nFunction: function2_override");
+	printf("\n=================================");
+
+	// We don't want to call cdecl_function2.
+	DYN_RETN(NULL);
+}
 
 //========================================================================
 // Begins testing.
 //========================================================================
 void cdecl_begin()
 {
+	// -----------------------------
 	// Call the original functions.
+	// -----------------------------
 	cdecl_function1();
 	cdecl_function2(22, 32, 43);
-	printf("Result of cdecl_function3: %d\n\n", cdecl_function3());
-	printf("Result of cdecl_function4: %d\n\n", cdecl_function4(22, 32, 43));
+	printf("\nResult of cdecl_function3: %d", cdecl_function3());
+	printf("\nResult of cdecl_function4: %d", cdecl_function4(22, 32, 43));
 
-	// Add the callback for the first function.
-	AddCallBack(&cdecl_function1, "v)v", Convention_CDECL, &function1);
+	// -----------------------------
+	// Hook cdecl_functions!
+	// -----------------------------
+	printf("\n\n********************************************************");
+	printf("\n* Phase 1:											 *");
+	printf("\n*  Single hook. Call functions like normal.            *");
+	printf("\n********************************************************\n");
 
-	// Now call the function
+	AddCallBack(&cdecl_function1, "v)v", Convention_CDECL, &function1_hook);
+	AddCallBack(&cdecl_function2, "iii)v", Convention_CDECL, &function2_hook);
+	
+	// -----------------------------
+	// Now call the hooked functions.
+	// The hooks should call them
+	// after finishing.
+	// -----------------------------
 	cdecl_function1();
+	cdecl_function2(1,2,3);
+
+	// -----------------------------
+	// Now add the override callback.
+	// -----------------------------
+	printf("\n\n********************************************************");
+	printf("\n* Phase 2:											 *");
+	printf("\n*  Two hooks. Do not call the original function.       *");
+	printf("\n********************************************************");
+
+	AddCallBack(&cdecl_function1, "v)v", Convention_CDECL, &function1_override);
+	AddCallBack(&cdecl_function2, "iii)v", Convention_CDECL, &function2_override);
+
+	// -----------------------------
+	// Call cdecl_function1.
+	// The override should prevent
+	// the original function from 
+	// being called.
+	// -----------------------------
+	cdecl_function1();
+
+	// -----------------------------
+	// Test to make sure we don't
+	// crash.
+	// -----------------------------
+	printf("\n\nI made it!\n");
 }
