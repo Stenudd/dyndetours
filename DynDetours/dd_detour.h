@@ -31,11 +31,11 @@
 //========================================================================
 // Includes
 //========================================================================
-#include "dd_definitions.h" /* Need detour definitions.          */
-#include "dd_funcstate.h"	/* Need CFuncState class.            */
-#include "dd_detourinfo.h"  /* Need CDetourInfo class.           */
-#include "dd_callbackman.h" /* Need CCallBackManager class.      */
-#include "ASMJit/AsmJit.h"  /* Need Assembler and Label classes. */
+#include "dd_definitions.h" /* Need detour definitions.            */
+#include "dd_funcstate.h"	/* Need CFuncState class.              */
+#include "dd_detourinfo.h"  /* Need CDetourInfo class.             */
+#include "dd_callbackman.h" /* Need CCallBackManager class.        */
+#include "dd_asmgen.h"		/* Needed for the CASMGenerator class. */
 
 //========================================================================
 // This is the detour class.
@@ -60,12 +60,8 @@ class CDetour
 		// Variables related to detour status
 		bool m_bInitialized;			/* True if everything was successfully setup. */
 
-		// The assembler.
-		AsmJit::Assembler m_Assembler;	/* Emits x86 ASM opcodes for our intermediate. */
-
-		// Labels
-		AsmJit::Label  m_PostCall;		/* Contains instructions for calling the trampoline. */
-		AsmJit::Label  m_OverCall;		/* Contains instructions for overriding return type. */
+		// The ASM generator.
+		CASMGenerator*	  m_pAsmGenerator; /* Generates ASM for this detour. */
 
 	public:
 
@@ -80,15 +76,6 @@ class CDetour
 
 		/* @brief Destructor. */
 		~CDetour( void );
-
-		/* @brief Sets up the codestub the target will jmp to. */
-		void Setup_PreCall( void );
-
-		/* @brief Sets up code to handle calling the trampoline. */
-		void Setup_PostCall( void );
-
-		/* @brief Sets up code to handle overriding the return value. */
-		void Setup_Override( void );
 
 		/* @brief Saves the original bytes of the hooked function. */
 		void Trampoline_Create( void ); 
@@ -126,6 +113,15 @@ class CDetour
 		 * @return unsigned char pointer to the target function's address.
 		 */
 		unsigned char* GetTarget( void ) { return m_pTarget; }
+
+		/* @brief Accessor for the handler function address.
+		 * @return The address of the function to redirect the target to. */
+		unsigned char* GetCallBack( void ) { return m_pCallBack; }
+
+		/* @brief Accessor for the trampoline. 
+		 * @return A pointer to the beginning of the trampoline.
+		 */
+		unsigned char* GetTrampoline( void ) { return m_pSavedBytes; }
 };
 
 #endif // _DD_DETOUR_H

@@ -25,64 +25,62 @@
 *
 */
 
-#ifndef _DD_DETOURINFO_H
-#define _DD_DETOURINFO_H
+#ifndef _DD_ASMGEN_H
+#define _DD_ASMGEN_H
 
 //========================================================================
 // Includes
 //========================================================================
 #include "dd_definitions.h"
+#include "dd_detour.h"
+#include "AsmJit/Assembler.h"
 
 //========================================================================
-// The DetourInfo class.
+// Forward declarations.
 //========================================================================
-class CDetourInfo
+class CDetour;
+
+//========================================================================
+// The ASM Generator class.
+//========================================================================
+class CASMGenerator
 {
-	public:
-		char*		 m_szParams;   /* Parameter type string.  */
-		int*		 m_iOffsets;   /* Parameter offset array. */
-		int			 m_nNumParams; /* Number of parameters. */
-		eCallingConv m_eConv;      /* Calling convention of this function. */
+	private:
+		AsmJit::Label m_pPostCall; // Code to handle the return value of the handler.
+		AsmJit::Label m_pOverride; // Code to handle overriding the retval of the hooked
+									// function.
+
+		AsmJit::Assembler m_Assembler; // Sets up and generates ASM for labels.
 
 	public:
-		/* @brief Constructor. */
-		CDetourInfo( char* szParams, eCallingConv conv );
+		/* @brief Constructor.
+		 * @param pDetour - The detour we're generating ASM for.
+		 */
+		CASMGenerator( CDetour* pDetour );
 
 		/* @brief Destructor. */
-		~CDetourInfo( void );
+		~CASMGenerator( void );
 
-		/* @brief Getter for param string.
-		 * @return Returns a string containing the parameters of
-		 *	 the hooked function.
+		/* @brief Accessor for the address of the generated ASM.
+		 * @return A void pointer to the start of the generated ASM code.
 		 */
-		char* GetParams( void ) { return m_szParams; }
-
-	   /* @brief Setter for param string.
-		* @param szParams - The new parameters of the function.
-		*/
-		void SetParams( char* szParams );
-
-		/* @brief Returns the number of parameters in this function.
-		 * @return Integer containing the number of arguments in the target
-		 *	function.
-		 */
-		int  GetNumParams( void ) { return m_nNumParams; }
-
-		/* @brief Accessor for the parameter offsets.
-		 * @return Pointer to an array containing integer values denoting
-		 *	the offset of each parameter from ESP.
-		 */
-		int* GetOffsets( void ) { return m_iOffsets; }
-
-		/* @brief Accessor for the calling convention.
-		 * @return The calling convention of the target function.
-		 */
-		eCallingConv GetConv( void ) { return m_eConv; }
+		void* GetCodeAddress( void ) { return m_Assembler.make(); }
+		
 
 	private:
-		void ComputeStackOffsets( void );
+		// --------------------------------
+		// ASM Generation functions!
+		// --------------------------------
 
+		/* @brief Generates Assembly code for a thiscall hook.
+		 * @param pDetour - The detour we're generating ASM for.
+		 */
+		void Generate_This( CDetour* pDetour ); 
+		
+		/* @brief Generates Assembly code for a cdecl hook.
+		 * @param pDetour - The detour we're generating ASM for.
+		 */
+		void Generate_Cdecl( CDetour* pDetour );
 };
 
-
-#endif // _DD_DETOURINFO_H
+#endif // _DD_ASMGEN_H

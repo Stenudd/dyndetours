@@ -44,10 +44,10 @@ CDetourInfo::CDetourInfo( char* szParams, eCallingConv conv )
 		return;
 	}
 
-	SetParams( szParams );
-
 	// Store calling convention
 	m_eConv = conv;
+
+	SetParams( szParams );
 }
 
 //========================================================================
@@ -62,11 +62,13 @@ void CDetourInfo::SetParams( char* szParams )
 	strcpy_s(m_szParams, strlen(szParams) + 1, szParams);
 	
 	// Calculate the number of parameters
-	// m_nNumParams = strlen(szParams) - 2;
 	m_nNumParams = 0;
 
-	// Loop through each character
+	// NOTE: On windows, thiscalls do not push
+	// the this pointer onto the stack.
 	char* ch = m_szParams;
+
+	// Loop through each character
 	while( *ch != ')' && *ch != '\0' )
 	{
 		// Figure out what it is..
@@ -120,12 +122,16 @@ void CDetourInfo::ComputeStackOffsets()
 	// Allocate space for offset array
 	m_iOffsets = new int[m_nNumParams];
 
-	// Loop through each parameter.
-	char *ch = m_szParams;
+	// NOTE: On windows, thiscalls do not push
+	// the this pointer onto the stack. However,
+	// the first char in a thiscall format string will
+	// always be a 'p' signifying the thispointer.
+	char* ch = m_szParams;
 
-	int curOffset = 0;
+	int curOffset = 0;	 // The current slot in the offset array we're on.
 	int offsetTotal = 0; // Setting this to 4 accounts for the return address.
 
+	// Loop through each parameter.
 	while( *ch != '\0' && *ch != ')' )
 	{
 		switch( *ch )

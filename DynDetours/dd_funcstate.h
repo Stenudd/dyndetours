@@ -29,12 +29,18 @@
 #define _DD_FUNCSTATE_H
 
 //========================================================================
+// Includes
+//========================================================================
+// #include "dd_asmgen.h"
+class CASMGenerator;
+
+//========================================================================
 // This class is for function state information.
 //========================================================================
 class CFuncState
 {
-	// We want CDetour to be able to access our stuff.
-	friend class CDetour;
+	// We want CASMGenerator to be able to access our stuff.
+	friend class CASMGenerator;
 
 	private:
 		unsigned long m_ulOrigESP; // Stack pointer.

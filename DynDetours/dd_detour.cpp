@@ -32,13 +32,6 @@
 #include "dd_handler.h"
 #include "dd_asm.h"
 #include "dd_memutils.h"
-#include "ASMJit/MemoryManager.h"
-#include "ASMJit/Compiler.h"
-
-//========================================================================
-// Namespaces we'll need.
-//========================================================================
-using namespace AsmJit;
 
 //========================================================================
 // Constructor
@@ -127,8 +120,11 @@ CDetour::~CDetour()
 			delete m_pSavedBytes;
 		}
 
-		// Free up assembler memory
-		m_Assembler.free();
+		// Free up memory taken up by the ASM generator.
+		if( m_pAsmGenerator )
+		{
+			delete m_pAsmGenerator;
+		}
 	}
 }
 
@@ -172,103 +168,14 @@ void CDetour::Detour_Create( void )
 	if( !m_pTarget )
 		return;
 
-	Setup_PreCall();
-	Setup_Override();
-	Setup_PostCall();
+	// Create a new ASMGenerator
+	m_pAsmGenerator = new CASMGenerator( this );
 
-	// Store the above buffer's address in our
-	// intermediate pointer.
-	m_pIntermediate = m_Assembler.make();
+	// Setup the intermediate
+	m_pIntermediate = m_pAsmGenerator->GetCodeAddress();
 
 	// Inject a jump to the intermediate
 	WriteJMP(m_pTarget, m_pIntermediate);
-}
-
-//========================================================================
-// Sets up the precall assembler code.
-//========================================================================
-void CDetour::Setup_PreCall()
-{
-	//---------------------------------------
-	// The Process:
-	//	1) Save ESP
-	//  1b) Save ECX if we're a thiscall.
-	//	2) Save original return address.
-	//	3) Push this pointer.
-	//  4) Call the handler.
-	//	5) Remove the thispointer.
-	//  6) Cmp result with override.
-	//  7) Jump if equal, to override.
-	//  8) Otherwise, jump to trampoline.
-	//---------------------------------------
-	m_Assembler.mov(dword_ptr_abs(&m_pState->m_ulOrigESP), esp); // mov m_ulOrigESP, esp
-
-#ifdef _WIN32
-	//---------------------------------------
-	// On Microsoft Windows, a thiscall puts
-	// the this pointer into ECX.
-	//---------------------------------------
-	if( m_pInfo->GetConv() == Convention_THIS )
-		m_Assembler.mov(dword_ptr_abs(&m_pState->m_ulOrigECX), ecx);
-#endif
-
-	//---------------------------------------
-	// CallBack handling.
-	//---------------------------------------
-	m_Assembler.push(imm((SysInt)this));			       // push this
-	m_Assembler.call(m_pCallBack);					       // call m_pCallBack
-
-	//---------------------------------------
-	// Stack restoration
-	// This gets rid of the "this" pointer for
-	// this class.
-	//---------------------------------------
-	m_Assembler.add( esp, imm(4) );					       // add esp, 4
-
-	//---------------------------------------
-	// Restore ECX if we're a thiscall.
-	//---------------------------------------
-#ifdef _WIN32
-	if( m_pInfo->GetConv() == Convention_THIS )
-		m_Assembler.mov(ecx, dword_ptr_abs(
-						&m_pState->m_ulOrigECX)); // mov ecx, m_ulOrigECX
-#endif
-
-	//---------------------------------------
-	// Return value handling.
-	//---------------------------------------
-	m_Assembler.cmp( eax, imm(HOOK_ACTION_OVERRIDE) );     // cmp eax, 1
-	m_Assembler.je(&m_OverCall);					       // je m_OverrideLabel
-	m_Assembler.jmp(&m_PostCall);					       // jmp m_Trampoline.
-}
-
-//========================================================================
-// Sets up the postcall assembler code.
-//========================================================================
-void CDetour::Setup_PostCall()
-{
-	//---------------------------------------
-	// The Process:
-	//	1) Jump to trampoline.
-	//---------------------------------------
-	m_Assembler.bind(&m_PostCall);
-	m_Assembler.jmp(m_pSavedBytes);
-}
-
-//========================================================================
-// Sets up the override assembler code.
-//========================================================================
-void CDetour::Setup_Override()
-{
-	//---------------------------------------
-	// The Process:
-	//	1) Take result in retbuf, store in eax.
-	//  2) Remove stack variables.
-	//	3) Return.
-	//---------------------------------------
-	m_Assembler.bind(&m_OverCall);
-	m_Assembler.mov( eax, dword_ptr_abs(&m_pState->m_pRetVAL));
-	m_Assembler.ret();
 }
 
 //========================================================================

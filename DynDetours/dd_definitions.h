@@ -54,6 +54,9 @@ enum eHookAction
 {
 	HOOK_ACTION_ERROR,	  /* Something went wrong. */
 	HOOK_ACTION_NONE,     /* Call original function like normal. */
+	HOOK_ACTION_MODIFY,	  /* The parameters of the original function were modified. 
+						   * Call like normal. 
+						   */
     HOOK_ACTION_OVERRIDE, /* Don't call original function. Use own return value. */
 };
 
