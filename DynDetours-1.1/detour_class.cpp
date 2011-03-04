@@ -201,7 +201,6 @@ CFuncObj* CDetour::CreateFromString( const char* szParamList, eCallConv eConv, v
 		// ------------------------------------
 		// No return type for us to use!
 		// ------------------------------------
-		printf("Parameter string doesn't have a return value!\n");
 		return pFuncObj;
 	}
 
@@ -448,7 +447,7 @@ HookRetBuf_t* CDetour::DoCallbacks( eHookType type )
 		// ------------------------------------
 		// Free up memory.
 		// ------------------------------------
-		free( pTempBuf );
+		delete pTempBuf;
 	}
 
 	// ------------------------------------
