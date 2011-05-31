@@ -53,5 +53,4 @@ class CFuncArg
 		void SetOffset( unsigned int offset ) { m_nOffset = offset; }
 };
 
-
 #endif // _ARG_CLASS_H

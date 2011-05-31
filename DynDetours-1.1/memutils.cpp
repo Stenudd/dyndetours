@@ -33,10 +33,18 @@
 #include "memutils.h"
 #include "asm.h"
 
+#ifdef __linux__
+#  include <sys/mman.h>
+#  include <unistd.h>
+#  define PAGE_SIZE 4096
+#  define ALIGN(ar) ((long)ar & ~(PAGE_SIZE-1))
+#  define PAGE_EXECUTE_READWRITE PROT_READ|PROT_WRITE|PROT_EXEC
+#endif
+
 // ==================================================================
 // Removes/Adds protection from/to memory
 // ==================================================================
-inline void ProtectMemory(void *addr, int length, int prot)
+void ProtectMemory(void *addr, int length, int prot)
 {
 #if defined __linux__
 	void *addr2 = (void *)ALIGN(addr);
@@ -51,7 +59,7 @@ inline void ProtectMemory(void *addr, int length, int prot)
 // ==================================================================
 // Wrapper for ProtectMemory.
 // ==================================================================
-inline void SetMemPatchable(void *address, size_t size)
+void SetMemPatchable(void *address, size_t size)
 {
 	ProtectMemory(address, (int)size, PAGE_EXECUTE_READWRITE);
 }

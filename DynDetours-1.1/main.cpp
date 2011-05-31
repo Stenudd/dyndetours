@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <windows.h>
 #include "cpp_manager.h"
 
 int test_1( int a )
@@ -23,32 +22,12 @@ HookRetBuf_t* callback_1( CDetour* pDet )
 	return pBuf;
 }
 
-int __stdcall test_2( int a, int b, int c )
-{
-	a++;
-	b = a - 25;
-	a--;
-	a *= 10;
-	printf("Inside test_2.\n");
-	return 24;
-}
-
-HookRetBuf_t* callback_2( CDetour* pDet )
-{
-	printf("Trololol.");
-	HookRetBuf_t* pBuf = new HookRetBuf_t;
-
-	pBuf->eRes = HOOKRES_OVERRIDE;
-	pBuf->pRetBuf = (void *)30;
-	return pBuf;
-}
-
 int main()
 {
 	// Create the callback.
-	CPP_CreateCallback( &test_2, CONV_STDCALL, "iii)v", &callback_2, TYPE_PRE );
+  CPP_CreateCallback( (void *)&test_1, CONV_CDECL, "i)i", &callback_1, TYPE_PRE );
 
-	printf("%d\n", test_2( 1, 2, 3 ));
+	printf("%d\n", test_1( 2 ));
 
 	printf("OMG LAWL");
 

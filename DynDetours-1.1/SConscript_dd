@@ -1,0 +1,30 @@
+import os, string, sys
+
+Import('env')
+
+dd_env = env.Copy()
+
+dd_src = [
+'arg_class.cpp',
+'cpp_manager.cpp',
+'conv_cdecl.cpp',
+'conv_main.cpp',
+'conv_stdcall.cpp',
+'conv_thiscall.cpp',
+'hook_handler.cpp',
+'asmbridge_class.cpp',
+'detour_class.cpp',
+'detourman_class.cpp',
+'trampoline_class.cpp',
+'func_stack.cpp',
+'func_class.cpp',
+'asm.cpp',
+'dd_utils.cpp',
+'memutils.cpp',
+]
+
+dd_env.Append(LIBPATH='../ASMJit/Build')
+dd_env.Append(LIBS='AsmJit')
+dd_env.Append(CCFLAGS='-I../ASMJit -g')
+dd_env.StaticLibrary('libDynDetours', [dd_src])
+dd_env.Install('#', 'libDynDetours.a')

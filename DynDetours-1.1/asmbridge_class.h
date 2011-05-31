@@ -93,3 +93,4 @@ class CASMBridge
 
 
 #endif // _ASMBRIDGE_CLASS_H
+

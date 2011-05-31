@@ -123,3 +123,4 @@ class CFuncObj
 };
 
 #endif // _FUNC_CLASS_H
+

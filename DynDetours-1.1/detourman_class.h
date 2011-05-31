@@ -54,9 +54,7 @@ class CDetourManager
 		CDetour* Find_Detour( void* pTarget );
 };
 
-//========================================================================
-// DetourManager singleton.
-//========================================================================
 extern CDetourManager g_DetourManager;
 
 #endif // _DETOURMAN_CLASS_H
+

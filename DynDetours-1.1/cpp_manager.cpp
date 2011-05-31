@@ -60,7 +60,7 @@ bool CPP_CreateCallback( void* target, eCallConv conv, const char* szParams,
 	// ------------------------------------
 	// Now add the callback.
 	// ------------------------------------
-	pMan->Add( callback, type );
+	pMan->Add( (void *)callback, type );
 
 	// ------------------------------------
 	// Done.

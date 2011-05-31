@@ -64,6 +64,4 @@ class CTrampoline
 		bool Restore( void );
 };
 
-
-
 #endif // _TRAMPOLINE_CLASS_H

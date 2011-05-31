@@ -32,7 +32,7 @@ CDetour* CDetourManager::CreateDetour(void* pTarget, void* pCallBack,
 	// ------------------------------------
 	// Try to find the detour in the map.
 	// ------------------------------------
-	TDetourMap::iterator iterDetour = m_DetourList.find(pTarget);
+	TDetourMap::iterator iterDetour = m_DetourList.find((unsigned int)pTarget);
 
 	// ------------------------------------
 	// Make sure it's valid...

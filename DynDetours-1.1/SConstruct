@@ -1,0 +1,72 @@
+import os, string, sys
+import SCons
+import SCons.Errors
+
+#
+# set configuration options
+#
+opts = Options('dd.conf')
+
+opts.Add(EnumOption('arch', 'Choose architecture to build for', 'linux-i386', allowed_values=('linux-i386', 'linux-x86_64', 'win32-mingw')))
+opts.Add(EnumOption('warnings', 'Choose warnings level', '1', allowed_values=('0', '1', '2')))
+opts.Add(EnumOption('debug', 'Set to >= 1 to build for debug', '0', allowed_values=('0', '1', '2', '3')))
+opts.Add(EnumOption('optimize', 'Set to >= 1 to build with general optimizations', '2', allowed_values=('0', '1', '2', '3', '4', '5', '6')))
+opts.Add(EnumOption('simd', 'Choose special CPU register optimizations', 'none', allowed_values=('none', 'sse', '3dnow')))
+opts.Add(BoolOption('mapping', 'Set to 1 to compile Editor and QMap mapping tools', 0))
+
+#
+# initialize compiler environment base
+#
+env = Environment(ENV = {'PATH' : os.environ['PATH']}, options = opts)
+
+if os.environ.has_key('CC'):
+    env['CC'] = os.environ['CC']
+if os.environ.has_key('CXX'):
+    env['CXX'] = os.environ['CXX']
+
+Help(opts.GenerateHelpText(env))
+
+#
+# set common compiler flags
+#
+print 'compiling for architecture ', env['arch']
+
+env.Append(CCFLAGS = '-pipe -fsigned-char -static')
+
+if env['arch'] == 'win32-mingw':
+	env.Tool('mingw')
+elif env['arch'] == 'win32-xmingw':
+	env.Tool('xmingw', ['SCons/Tools'])
+
+if env['warnings'] == '1':
+	env.Append(CCFLAGS = '-Wall')
+elif env['warnings'] == '2':
+	env.Append(CCFLAGS = '-Wall -Werror')
+
+if env['debug'] != '0':
+	env.Append(CCFLAGS = '-ggdb${debug} -D_DEBUG')
+else:
+	env.Append(CCFLAGS = '-DNDEBUG')
+
+if env['optimize'] != '0':
+	env.Append(CCFLAGS = '-O${optimize} -ffast-math -fno-strict-aliasing -funroll-loops')
+
+#if env['simd'] == 'sse':
+#	env.Append(CCFLAGS = '-DSIMD_SSE')
+#elif env['simd'] == '3dnow':
+#	env.Append(CCFLAGS = '-DSIMD_3DNOW')
+
+conf = Configure(env)
+env = conf.Finish()
+
+#
+# save options
+#
+opts.Save('dd.conf', env)
+
+#
+# compile targets
+#
+Export('env')
+
+SConscript('SConscript_dd', build_dir='build/dd', duplicate=0)

@@ -70,7 +70,7 @@ CASMBridge::CASMBridge( CDetour* pDetour )
 	// 4) If the result is
 	// ------------------------------------
 	m_Assembler.push( imm((SysInt)pDetour) );
-	m_Assembler.call( &Dyn_PreHandler );
+	m_Assembler.call( (void *)&Dyn_PreHandler );
 	m_Assembler.add( esp, imm(4) );
 
 	// ------------------------------------
@@ -164,3 +164,4 @@ CASMBridge::~CASMBridge( void )
 	delete m_pCallConvention;
 	m_Assembler.free();
 }
+

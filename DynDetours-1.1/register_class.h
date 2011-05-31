@@ -31,11 +31,11 @@ class CRegisterObj
 			// ------------------------------------
 			// Initialize everything to 0.
 			// ------------------------------------
-			r_esp = NULL;
-			r_ebp = NULL;
-			r_eax = NULL;
-			r_ecx = NULL;
-			r_edx = NULL;
+			r_esp = 0;
+			r_ebp = 0;
+			r_eax = 0;
+			r_ecx = 0;
+			r_edx = 0;
 		}
 
 		// ------------------------------------

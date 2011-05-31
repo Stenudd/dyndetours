@@ -29,6 +29,8 @@ eArgType CharToTypeEnum( char c )
 			return TYPE_FLOAT;
 		case 'b':
 			return TYPE_BOOL;
+        case 'S':
+            return TYPE_CHAR_PTR;
 	}
 
 	// ------------------------------------

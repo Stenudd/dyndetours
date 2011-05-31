@@ -1,4 +1,4 @@
 mkdir Build
 cd Build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DASMJIT_BUILD_LIBRARY=1 -DASMJIT_BUILD_TEST=1 -G"Visual Studio 9 2008"
+cmake .. -DCMAKE_BUILD_TYPE=Release -DASMJIT_BUILD_LIBRARY=1 -DASMJIT_BUILD_TEST=1 -G"Visual Studio 10"
 cd ..

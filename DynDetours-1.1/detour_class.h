@@ -114,3 +114,4 @@ class CDetour
 };
 
 #endif // _DETOUR_CLASS_H
+
