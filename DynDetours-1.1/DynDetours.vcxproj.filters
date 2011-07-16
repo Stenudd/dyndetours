@@ -183,7 +183,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\ASMJit\Build\Release\AsmJit.lib">
+    <Library Include="..\ASMJit\lib\AsmJit.lib">
       <Filter>Link Libraries</Filter>
     </Library>
   </ItemGroup>

@@ -113,7 +113,7 @@
     <ClInclude Include="cpp_manager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\ASMJit\Build\Release\AsmJit.lib" />
+    <Library Include="..\ASMJit\lib\AsmJit.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
