@@ -25,6 +25,6 @@ dd_src = [
 
 dd_env.Append(LIBPATH='../ASMJit/Build')
 dd_env.Append(LIBS='AsmJit')
-dd_env.Append(CCFLAGS='-I../ASMJit -g')
+dd_env.Append(CCFLAGS='-I../ASMJit -g -fPIC -fno-exceptions -fno-rtti -msse -msse2 -m32 -g -g3 -ggdb3')
 dd_env.StaticLibrary('libDynDetours', [dd_src])
 dd_env.Install('#', 'libDynDetours.a')

@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Function Builder">
+      <UniqueIdentifier>{21138f50-8545-4c6d-b736-59aa325e33ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Function Builder\Stack">
+      <UniqueIdentifier>{e5852b0a-1006-4570-87c7-6fad22419dc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Argument Builder">
+      <UniqueIdentifier>{67d8510d-7191-4211-9702-fb50b76ef495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Detour System">
+      <UniqueIdentifier>{18558cbf-f673-409e-9023-557079b9eec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Detour System\Conventions">
+      <UniqueIdentifier>{a6737934-2a8b-46f3-8dc8-9254a5cbb649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Detour System\Hook System">
+      <UniqueIdentifier>{d88a2532-7bc6-44bc-b2eb-c253250a2e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helper">
+      <UniqueIdentifier>{99816ab2-284a-42c2-b113-fc2261c0680b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Callback System">
+      <UniqueIdentifier>{3d9b9778-cc50-4279-b4f1-1f84366ee1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Function Builder">
+      <UniqueIdentifier>{1e19423e-ebe6-4545-8bf7-85ae3f6d8339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Function Builder\Stack">
+      <UniqueIdentifier>{1463a830-9fa1-410b-951e-3811db848e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Argument Builder">
+      <UniqueIdentifier>{671cafd1-8cff-4216-84a3-36bed6672b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Detour System">
+      <UniqueIdentifier>{5e4fae92-ab3c-4387-a4e7-5cbd2dc9875e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Detour System\Conventions">
+      <UniqueIdentifier>{1996d63c-e400-41b4-9580-ed056734374d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Detour System\Hook System">
+      <UniqueIdentifier>{138acda2-5021-49a6-a774-235199a5c963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Helper">
+      <UniqueIdentifier>{35e2497d-b621-4f49-a8e7-70c68e3e4cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Callback System">
+      <UniqueIdentifier>{4a14a257-8467-44b0-8f31-99eefac980a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Link Libraries">
+      <UniqueIdentifier>{42f87daa-aa36-4f5b-a9ff-f5ac116c332c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="func_class.cpp">
+      <Filter>Source Files\Function Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="func_stack.cpp">
+      <Filter>Source Files\Function Builder\Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="arg_class.cpp">
+      <Filter>Source Files\Argument Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="asmbridge_class.cpp">
+      <Filter>Source Files\Detour System</Filter>
+    </ClCompile>
+    <ClCompile Include="detour_class.cpp">
+      <Filter>Source Files\Detour System</Filter>
+    </ClCompile>
+    <ClCompile Include="detourman_class.cpp">
+      <Filter>Source Files\Detour System</Filter>
+    </ClCompile>
+    <ClCompile Include="trampoline_class.cpp">
+      <Filter>Source Files\Detour System</Filter>
+    </ClCompile>
+    <ClCompile Include="conv_cdecl.cpp">
+      <Filter>Source Files\Detour System\Conventions</Filter>
+    </ClCompile>
+    <ClCompile Include="conv_main.cpp">
+      <Filter>Source Files\Detour System\Conventions</Filter>
+    </ClCompile>
+    <ClCompile Include="conv_stdcall.cpp">
+      <Filter>Source Files\Detour System\Conventions</Filter>
+    </ClCompile>
+    <ClCompile Include="conv_thiscall.cpp">
+      <Filter>Source Files\Detour System\Conventions</Filter>
+    </ClCompile>
+    <ClCompile Include="hook_handler.cpp">
+      <Filter>Source Files\Detour System\Hook System</Filter>
+    </ClCompile>
+    <ClCompile Include="asm.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="dd_utils.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="memutils.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp_manager.cpp">
+      <Filter>Source Files\Callback System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="func_class.h">
+      <Filter>Header Files\Function Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="func_types.h">
+      <Filter>Header Files\Function Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="func_stack.h">
+      <Filter>Header Files\Function Builder\Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="arg_class.h">
+      <Filter>Header Files\Argument Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="arg_types.h">
+      <Filter>Header Files\Argument Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="asmbridge_class.h">
+      <Filter>Header Files\Detour System</Filter>
+    </ClInclude>
+    <ClInclude Include="detour_class.h">
+      <Filter>Header Files\Detour System</Filter>
+    </ClInclude>
+    <ClInclude Include="detourman_class.h">
+      <Filter>Header Files\Detour System</Filter>
+    </ClInclude>
+    <ClInclude Include="register_class.h">
+      <Filter>Header Files\Detour System</Filter>
+    </ClInclude>
+    <ClInclude Include="trampoline_class.h">
+      <Filter>Header Files\Detour System</Filter>
+    </ClInclude>
+    <ClInclude Include="conv_cdecl.h">
+      <Filter>Header Files\Detour System\Conventions</Filter>
+    </ClInclude>
+    <ClInclude Include="conv_interface.h">
+      <Filter>Header Files\Detour System\Conventions</Filter>
+    </ClInclude>
+    <ClInclude Include="conv_main.h">
+      <Filter>Header Files\Detour System\Conventions</Filter>
+    </ClInclude>
+    <ClInclude Include="conv_stdcall.h">
+      <Filter>Header Files\Detour System\Conventions</Filter>
+    </ClInclude>
+    <ClInclude Include="conv_thiscall.h">
+      <Filter>Header Files\Detour System\Conventions</Filter>
+    </ClInclude>
+    <ClInclude Include="hook_handler.h">
+      <Filter>Header Files\Detour System\Hook System</Filter>
+    </ClInclude>
+    <ClInclude Include="hook_types.h">
+      <Filter>Header Files\Detour System\Hook System</Filter>
+    </ClInclude>
+    <ClInclude Include="asm.h">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="dd_utils.h">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="memutils.h">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="callback_manager.h">
+      <Filter>Header Files\Callback System</Filter>
+    </ClInclude>
+    <ClInclude Include="cpp_manager.h">
+      <Filter>Header Files\Callback System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ASMJit\Build\Release\AsmJit.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

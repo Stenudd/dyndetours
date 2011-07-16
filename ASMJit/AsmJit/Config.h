@@ -46,7 +46,7 @@
 // Provides definitions about your cpu architecture. It's detected by default,
 // so override it if you have problems with automatic detection.
 
-#define ASMJIT_X86
+// #define ASMJIT_X86
 // #define ASMJIT_X64
 
 // [AsmJit - API]
@@ -59,15 +59,15 @@
 // to disable this feature. ASMJIT_NOTHROW marks functions that never throws
 // an exception.
 
-#define ASMJIT_HIDDEN
+// #define ASMJIT_HIDDEN
 #define ASMJIT_API
-#define ASMJIT_NOTHROW
+// #define ASMJIT_NOTHROW
 
 
 // [AsmJit - Memory Management]
-#define ASMJIT_MALLOC ::malloc
-#define ASMJIT_REALLOC ::realloc
-#define ASMJIT_FREE ::free
+// #define ASMJIT_MALLOC ::malloc
+// #define ASMJIT_REALLOC ::realloc
+// #define ASMJIT_FREE ::free
 
 // [AsmJit - Debug]
 // #define ASMJIT_CRASH() crash()

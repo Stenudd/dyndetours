@@ -72,6 +72,7 @@ CASMBridge::CASMBridge( CDetour* pDetour )
 	m_Assembler.push( imm((SysInt)pDetour) );
 	m_Assembler.call( (void *)&Dyn_PreHandler );
 	m_Assembler.add( esp, imm(4) );
+    m_Assembler.and_( esp, imm(-16) );
 
 	// ------------------------------------
 	// Figure out what to do with the
@@ -133,17 +134,21 @@ CASMBridge::CASMBridge( CDetour* pDetour )
 	m_Assembler.mov( eax, dword_ptr_abs(&registers->r_eax) );
 	
 	// ------------------------------------
-	// Hack for __thiscall.
+	// Hack for __thiscall on windows.
+	// Callee cleans up the stack.
 	// ------------------------------------
+#ifdef _WIN32
 	if( (pFuncObj->GetConvention() == CONV_THISCALL) || 
-		(pFuncObj->GetConvention() == CONV_STDCALL) )
+	    (pFuncObj->GetConvention() == CONV_STDCALL) )
 	{
 		// ------------------------------------
 		// Get the size in bytes of the stack.
 		// ------------------------------------
 		int iBytesToClean = pFuncObj->GetStack()->GetStackSize();
 		m_Assembler.ret( imm(iBytesToClean) );
+		return;
 	}
+#endif
 
 	// ------------------------------------
 	// Just return.

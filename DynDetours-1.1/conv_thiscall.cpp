@@ -21,15 +21,14 @@ using namespace AsmJit;
 void CThiscall_Convention::Stage_1( Assembler* pAssembler )
 {
 	// ------------------------------------
-	// 1) Save the stack pointer
+	// 2) Save the stack pointer.
 	// ------------------------------------
 	pAssembler->mov( dword_ptr_abs(&m_Registers.r_esp), esp );
 
 	// ------------------------------------
-	// 2) Save the this pointer.
+	// 3) Save the this pointer.
 	// ------------------------------------
 	pAssembler->mov( dword_ptr_abs(&m_Registers.r_ecx), ecx );
-
 }
 
 // =======================================================================
